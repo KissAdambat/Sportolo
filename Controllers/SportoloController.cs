@@ -26,12 +26,49 @@ namespace Sportolo.Controllers
                 var sport = new SportoloCL
                 {
                     name = dr.GetString("name"),
-                    email = dr.GetString("description"),
+                    email = dr.GetString("email"),
                 };
                 sportolok.Add(sport);
             }
             connector.Close();
             return sportolok;
         }
+
+        [HttpGet("SportoloDESC")]
+        public object GetASportoloRun(string name)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            int idf = 0;
+            List<Eredmenyek> eredmenyek = new();
+            connector.Open();
+            var sql = $"SELECT `id` FROM sportolo WHERE `name`=@name";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@name", name);
+            var dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                idf = dr.GetInt32("id");
+            }
+            connector.Close();
+            connector.Open();
+            var sql2 = $"SELECT `competition`, `description` FROM eredmeny WHERE `sportoloId`=@sportoloId";
+            var cmd2 = new MySqlCommand(sql2, connector);
+            cmd2.Parameters.AddWithValue("@sportoloId", idf);
+            var dr2 = cmd2.ExecuteReader();
+            while (dr2.Read())
+            {
+                var eredmeny = new Eredmenyek
+                {
+                    competition = dr2.GetString("competition"),
+                    description = dr2.GetString("description"),
+                };
+                eredmenyek.Add(eredmeny);
+            }
+
+            connector.Close();
+            return eredmenyek;
+        }
+
+
     }
 }
