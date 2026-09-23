@@ -96,7 +96,7 @@ namespace Sportolo.Controllers
         {
             var connector = new MySqlConnection(ConnectionString);
             connector.Open();
-            var sql = $"UPDATE `blogger` SET `competition`=@comp,`description`=@desc,`updateTime`=@updT,`sportoloId`=@sportId WHERE `id`=@id";
+            var sql = $"UPDATE `eredmeny` SET `competition`=@comp,`description`=@desc,`updateTime`=@updT,`sportoloId`=@sportId WHERE `id`=@id";
             var cmd = new MySqlCommand(sql, connector);
             cmd.Parameters.AddWithValue("@comp", eredmenyek.competition);
             cmd.Parameters.AddWithValue("@desc", eredmenyek.description);
@@ -107,6 +107,17 @@ namespace Sportolo.Controllers
             connector.Close();
             return eredmenyek;
         }
-
+        [HttpDelete("EredmenyDelete")]
+        public object DeleteEredmeny(int id)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+            var sql = $"DELETE FROM `eredmeny` WHERE `id`=@id";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+            connector.Close();
+            return "Kitörölve";
+        }
     }
 }
