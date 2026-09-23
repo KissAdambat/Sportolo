@@ -85,5 +85,35 @@ namespace Sportolo.Controllers
             connector.Close();
             return $"Eredmeny tablaba ennyi eredmeny van: {darab}";
         }
+
+        [HttpGet("SportoloEredmenyDarab")]
+        public string GetASportoloEredmenyDarab(string name)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            int idf = 0;
+            int darab = 0;
+            connector.Open();
+            var sql = $"SELECT `id` FROM sportolo WHERE `name`=@name";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@name", name);
+            var dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                idf = dr.GetInt32("id");
+            }
+            connector.Close();
+            connector.Open();
+            var sql2 = $"SELECT COUNT(*) AS eredmenyekSzama FROM eredmeny WHERE sportoloId = @sportoloId;";
+            var cmd2 = new MySqlCommand(sql2, connector);
+            cmd2.Parameters.AddWithValue("@sportoloId", idf);
+            var dr2 = cmd2.ExecuteReader();
+            while (dr2.Read())
+            {
+                darab = dr2.GetInt32("eredmenyekSzama");
+            }
+
+            connector.Close();
+            return $"Ennyi eredménye van {name} : {darab} ";
+        }
     }
 }
