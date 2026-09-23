@@ -90,5 +90,23 @@ namespace Sportolo.Controllers
             connector.Close();
             return erd;
         }
+
+        [HttpPut("EredmenyPut")]
+        public object UpdateEredmenyek(int id, Eredmenyek eredmenyek)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+            var sql = $"UPDATE `blogger` SET `competition`=@comp,`description`=@desc,`updateTime`=@updT,`sportoloId`=@sportId WHERE `id`=@id";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@comp", eredmenyek.competition);
+            cmd.Parameters.AddWithValue("@desc", eredmenyek.description);
+            cmd.Parameters.AddWithValue("@updT", eredmenyek.updateTime);
+            cmd.Parameters.AddWithValue("@sportId", eredmenyek.sportoloId);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+            connector.Close();
+            return eredmenyek;
+        }
+
     }
 }
