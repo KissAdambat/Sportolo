@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
+using Sportolo.Models;
 
 namespace Sportolo.Controllers
 {
@@ -7,5 +9,6 @@ namespace Sportolo.Controllers
     [ApiController]
     public class SportoloController : ControllerBase
     {
+       
     }
 }
