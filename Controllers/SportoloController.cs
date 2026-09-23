@@ -69,6 +69,21 @@ namespace Sportolo.Controllers
             return eredmenyek;
         }
 
-
+        [HttpGet("EredmenyCount")]
+        public string GetAllEredmeny()
+        {
+            int darab = 0;
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+            string sql = "SELECT COUNT(id) AS Eredmenyek FROM eredmeny;";
+            var cmd = new MySqlCommand(sql, connector);
+            var dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                darab = dr.GetInt32("Eredmenyek");
+            }
+            connector.Close();
+            return $"Eredmeny tablaba ennyi eredmeny van: {darab}";
+        }
     }
 }
