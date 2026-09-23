@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using Sportolo.Models;
 using System.Data;
+using Sportolo.Models.DTOs;
 
 namespace Sportolo.Controllers
 {
@@ -64,6 +65,30 @@ namespace Sportolo.Controllers
             return eredmenyek;
         }
 
+        [HttpPost("EredmenyPost")]
+        public object AddNewEredmeny(AddEredmenyDTOs eredmeny)
+        {
+            var connector = new MySqlConnection(ConnectionString);
+            connector.Open();
+            var erd = new Eredmenyek
+            {
+                competition = eredmeny.competition,
+                description = eredmeny.description,
+                resultTime = DateTime.Now,
+                updateTime = DateTime.Now,
+                sportoloId = eredmeny.sportoloId
+            };
 
+            var sql = $"INSERT INTO `eredmeny`(`competition`, `description`, `resultTime`, `updateTime`, `sportoloId`) VALUES (@comp,@desc,@res,@upd,@spid)";
+            var cmd = new MySqlCommand(sql, connector);
+            cmd.Parameters.AddWithValue("@comp", erd.competition);
+            cmd.Parameters.AddWithValue("@desc", erd.description);
+            cmd.Parameters.AddWithValue("@res", erd.resultTime);
+            cmd.Parameters.AddWithValue("@upd", erd.updateTime);
+            cmd.Parameters.AddWithValue("@spid", erd.sportoloId);
+            cmd.ExecuteNonQuery();
+            connector.Close();
+            return erd;
+        }
     }
 }
